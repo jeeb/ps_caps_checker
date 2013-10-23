@@ -1,0 +1,8 @@
+*.user
+*.suo
+*.sdf
+*.opensdf
+*.aps
+
+/bin
+/obj
