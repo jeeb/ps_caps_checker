@@ -12,6 +12,7 @@ int main(int argc, char const *argv[])
     IDirect3DDevice9      *device = NULL;
     D3DPRESENT_PARAMETERS  d3dpp;
     D3DCAPS9 capabilities;
+    D3DADAPTER_IDENTIFIER9 identifier;
 
     ZeroMemory( &d3dpp, sizeof(d3dpp) );
     d3dpp.Windowed   = TRUE;
@@ -52,6 +53,17 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
+    hr = d3d->lpVtbl->GetAdapterIdentifier(d3d, D3DADAPTER_DEFAULT, 0, &identifier);
+    if (FAILED(hr)) {
+        printf("Getting adapter identifier failed :<\n");
+        device->lpVtbl->Release(device);
+        d3d->lpVtbl->Release(d3d);
+        DestroyWindow(wnd);
+        return 1;
+    }
+
+    printf("Device: %s, ID: %d\n\n", identifier.Description,
+           capabilities.MasterAdapterOrdinal);
     printf("PixelShaderVersion: %d.%d\n\n", D3DSHADER_VERSION_MAJOR(capabilities.PixelShaderVersion),
            D3DSHADER_VERSION_MINOR(capabilities.PixelShaderVersion));
     printf("Caps: %ld, DynamicFlowControlDepth: %d\nNumTemps: %d, StaticFlowControlDepth: %d\nNumInstructionSlots: %d\n",
