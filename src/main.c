@@ -52,6 +52,8 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
+    printf("PixelShaderVersion: %d.%d\n\n", D3DSHADER_VERSION_MAJOR(capabilities.PixelShaderVersion),
+           D3DSHADER_VERSION_MINOR(capabilities.PixelShaderVersion));
     printf("Caps: %ld, DynamicFlowControlDepth: %d\nNumTemps: %d, StaticFlowControlDepth: %d\nNumInstructionSlots: %d\n",
            capabilities.PS20Caps.Caps, capabilities.PS20Caps.DynamicFlowControlDepth, capabilities.PS20Caps.NumTemps,
            capabilities.PS20Caps.StaticFlowControlDepth, capabilities.PS20Caps.NumInstructionSlots);
