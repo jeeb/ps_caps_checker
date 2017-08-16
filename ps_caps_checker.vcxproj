@@ -13,7 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{0CB8A3F2-D5F6-47E1-A972-383B27F89A97}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>madVRChecker</RootNamespace>
+    <RootNamespace>ps_caps_checker</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
