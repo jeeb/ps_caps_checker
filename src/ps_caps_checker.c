@@ -5,8 +5,9 @@
 
 int main(int argc, char const *argv[])
 {
-    HWND    wnd;
-    HRESULT hr;
+    HWND    wnd       = NULL;
+    HRESULT hr        = E_FAIL;
+    int     exit_code = 1;
 
     IDirect3D9            *d3d    = NULL;
     IDirect3DDevice9      *device = NULL;
@@ -23,7 +24,7 @@ int main(int argc, char const *argv[])
     d3d = Direct3DCreate9(D3D_SDK_VERSION);
     if (!d3d) {
         printf("IDirect3D9 interface creation failed :<\n");
-        return 1;
+        goto cleanup;
     }
 
     wnd = CreateWindow(L"static", L"Testing D3D9", WS_CAPTION,
@@ -31,7 +32,7 @@ int main(int argc, char const *argv[])
                        NULL, NULL, NULL, NULL);
     if (!wnd) {
         printf("Window creation failed :<\n");
-        return 1;
+        goto cleanup;
     }
 
     hr = d3d->lpVtbl->CreateDevice(d3d, D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL,
@@ -39,27 +40,19 @@ int main(int argc, char const *argv[])
                                    &d3dpp, &device);
     if (FAILED(hr)) {
         printf("Device Creation failed :<\n");
-        IDirect3D9_Release(d3d);
-        DestroyWindow(wnd);
-        return 1;
+        goto cleanup;
     }
 
     hr = device->lpVtbl->GetDeviceCaps(device, &capabilities);
     if (FAILED(hr)) {
         printf("Getting capabilities failed :<\n");
-        device->lpVtbl->Release(device);
-        d3d->lpVtbl->Release(d3d);
-        DestroyWindow(wnd);
-        return 1;
+        goto cleanup;
     }
 
     hr = d3d->lpVtbl->GetAdapterIdentifier(d3d, D3DADAPTER_DEFAULT, 0, &identifier);
     if (FAILED(hr)) {
         printf("Getting adapter identifier failed :<\n");
-        device->lpVtbl->Release(device);
-        d3d->lpVtbl->Release(d3d);
-        DestroyWindow(wnd);
-        return 1;
+        goto cleanup;
     }
 
     printf("Device: %s, ID: %d\n\n", identifier.Description,
@@ -70,5 +63,18 @@ int main(int argc, char const *argv[])
            capabilities.PS20Caps.Caps, capabilities.PS20Caps.DynamicFlowControlDepth, capabilities.PS20Caps.NumTemps,
            capabilities.PS20Caps.StaticFlowControlDepth, capabilities.PS20Caps.NumInstructionSlots);
 
-    return 0;
+    exit_code = 0;
+
+cleanup:
+    if (device) {
+        IDirect3DDevice9_Release(device);
+    }
+    if (wnd) {
+        DestroyWindow(wnd);
+    }
+    if (d3d) {
+        IDirect3D9_Release(d3d);
+    }
+
+    return exit_code;
 }
